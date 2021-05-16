@@ -12,7 +12,7 @@ export const useVideoCall = () => {
   const [remoteStreams, setRemoteStreams] = useState({});
   const [room, setRoom] = useState();
 
-  const roomId = '1955'
+  const roomId = '2000'
   const name = 'front-end-web'
 
   const onGetRoomsCallBack = roomParam => {
@@ -44,7 +44,16 @@ export const useVideoCall = () => {
       setRoom(roomParam);
       const peerConnection = new RTCPeerConnection(configuration);
       peerConnections[idUserJoin] = peerConnection;
-      peerConnections[idUserJoin].addStream(localStream);
+
+      // peerConnections[idUserJoin].addStream(localStream);
+
+
+      localStream && localStream.getTracks().forEach(function(track) {
+        peerConnections[idUserJoin].addTrack(track, localStream);
+      });
+    
+
+
       peerConnections[idUserJoin].onicecandidate = event => {
         try {
           if (event.candidate) {
@@ -70,13 +79,18 @@ export const useVideoCall = () => {
     async (idSender, description) => {
       const peerConnection = new RTCPeerConnection(configuration);
       peerConnections[idSender] = peerConnection;
-      peerConnections[idSender].addStream(localStream);
+      // peerConnections[idSender].addStream(localStream);
+      localStream &&  localStream.getTracks().forEach(function(track) {
+        peerConnections[idSender].addTrack(track, localStream);
+      });
+    
       peerConnections[idSender].onicecandidate = event => {
         if (event.candidate) {
           SocketService.candidateRoomVideo(event.candidate.toJSON(), idSender);
         }
       };
       peerConnections[idSender].onaddstream = e => {
+        console.log('co the nao m chay ko vay chang trai')
         if (e.stream && peerConnections[idSender] !== e.stream) {
           const newStream = e.stream;
           setRemoteStreams(preStream => {
@@ -115,30 +129,30 @@ export const useVideoCall = () => {
     setRemoteStreams({});
   }, []);
 
-  // useEffect(() => {
-  //   SocketService.connectSocket();
+  useEffect(() => {
+    SocketService.connectSocket();
 
-  //   // setup room
-  //   SocketService.joinRoom(roomId, roomId, name);
-  //   SocketService.getRoom(roomId);
-  //   SocketService.onGetRoom(onGetRoomsCallBack);
-  //   SocketService.onLeaveRoom(onLeaveRoomCallBack);
+    // setup room
+    SocketService.joinRoom(roomId, roomId, name);
+    SocketService.getRoom(roomId);
+    SocketService.onGetRoom(onGetRoomsCallBack);
+    SocketService.onLeaveRoom(onLeaveRoomCallBack);
 
-  //   //setup stream
-  //   SocketService.onCandidateRoomVideo(onCandidateRoomVideoCallBack);
-  //   SocketService.onAnswerRoomVideo(onAnswerRoomVideoCallBack);
-  //   return () => {
-  //     SocketService.leaveRoom(roomId);
-  //     SocketService.disConnectSocket();
-  //     exitRoom();
-  //   };
-  // }, [roomId, name, exitRoom, onLeaveRoomCallBack]);
+    // //setup stream
+    SocketService.onCandidateRoomVideo(onCandidateRoomVideoCallBack);
+    SocketService.onAnswerRoomVideo(onAnswerRoomVideoCallBack);
+    return () => {
+      SocketService.leaveRoom(roomId);
+      SocketService.disConnectSocket();
+      exitRoom();
+    };
+  }, [roomId, name, exitRoom, onLeaveRoomCallBack]);
 
-  // useEffect(() => {
-  //   //setup stream
-  //   SocketService.onJoinRoom(onJoinRoomCallBack);
-  //   SocketService.onOfferRoomVideo(onOfferRoomCallBack);
-  // }, [onJoinRoomCallBack, onOfferRoomCallBack]);
+  useEffect(() => {
+    //setup stream
+    SocketService.onJoinRoom(onJoinRoomCallBack);
+    SocketService.onOfferRoomVideo(onOfferRoomCallBack);
+  }, [onJoinRoomCallBack, onOfferRoomCallBack]);
 
   useEffect(() => {
     const turnOnCamera = async () => {
@@ -169,11 +183,11 @@ export const useCurrentVideo = () => {
     const videoCurrentRef = useRef(null)
     const videoCustomerRef = useRef(null)
 
-    const {localStream} = useContext(VideoContext)
+    const {localStream,remoteStreams} = useContext(VideoContext)
+
     useEffect(() => {
      if (videoCurrentRef?.current) {
         videoCurrentRef.current.srcObject = localStream
-        console.log('ua',localStream)
     }
         return () => {
             // cleanup
@@ -181,15 +195,20 @@ export const useCurrentVideo = () => {
     }, [localStream])
     
     useEffect(() => {
-      console.log('ko chay ha ba ')
      if (videoCustomerRef?.current) {
-        videoCustomerRef.current.srcObject = localStream
+      const customerStreams = [];
+
+      for (var remoteStream in remoteStreams) {
+        if (remoteStreams.hasOwnProperty(remoteStream)) {
+          customerStreams.push(remoteStreams[remoteStream]);
+        }
+      } 
+        videoCustomerRef.current.srcObject = customerStreams[0]
     }
-    console.log('ko chay ha ba 2',localStream)
 
         return () => {
             // cleanup
         }
-    }, [localStream])
+    }, [remoteStreams])
     return {videoCurrentRef, videoCustomerRef}
 }

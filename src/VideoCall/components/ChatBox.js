@@ -8,11 +8,11 @@ import { useCurrentVideo } from '../hooks'
 const VideoBox = styled.video`
     height:200px;
     width:200px;
-    background-color:rebeccapurple;
+    background-color:red;
 `
 
 export default function ChatBox() {
-  const {videoCustomerRef} = useCurrentVideo
+  const { videoCustomerRef } = useCurrentVideo()
     return (
         <div className="main__right">
         <div className="main__chat_window">

@@ -12,7 +12,7 @@ const VideoBoxItem = styled.video`
 `
 
 export default function VideoBox() {
-  const { videoCustomerRef } = useCurrentVideo
+  const { videoCustomerRef } = useCurrentVideo()
 
   return (
     <div className="main__left">

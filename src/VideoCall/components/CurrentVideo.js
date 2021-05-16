@@ -16,12 +16,11 @@ const VideoBox = styled.video`
 `
 
 export default function CurrentVideo1() {
-    const { videoCustomerRef } = useCurrentVideo()
-    console.log('vide  la ga', videoCustomerRef)
+    const { videoCurrentRef } = useCurrentVideo()
     return (
         <Container>
             <VideoBox
-                ref={videoCustomerRef}
+                ref={videoCurrentRef}
                 playsInline autoPlay muted />
         </Container>
     )
