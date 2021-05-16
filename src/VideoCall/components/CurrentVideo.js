@@ -1,5 +1,5 @@
 import React from 'react'
-import {useCurrentVideo} from '../hooks'
+import { useCurrentVideo } from '../hooks'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -16,13 +16,13 @@ const VideoBox = styled.video`
 `
 
 export default function CurrentVideo1() {
-    const {videoRef} = useCurrentVideo()
-    console.log('vide ',videoRef)
+    const { videoCustomerRef } = useCurrentVideo()
+    console.log('vide  la ga', videoCustomerRef)
     return (
         <Container>
             <VideoBox
-            ref={videoRef}
-            playsInline autoPlay muted />
+                ref={videoCustomerRef}
+                playsInline autoPlay muted />
         </Container>
     )
 }

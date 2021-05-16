@@ -115,30 +115,30 @@ export const useVideoCall = () => {
     setRemoteStreams({});
   }, []);
 
-  useEffect(() => {
-    SocketService.connectSocket();
+  // useEffect(() => {
+  //   SocketService.connectSocket();
 
-    // setup room
-    SocketService.joinRoom(roomId, roomId, name);
-    SocketService.getRoom(roomId);
-    SocketService.onGetRoom(onGetRoomsCallBack);
-    SocketService.onLeaveRoom(onLeaveRoomCallBack);
+  //   // setup room
+  //   SocketService.joinRoom(roomId, roomId, name);
+  //   SocketService.getRoom(roomId);
+  //   SocketService.onGetRoom(onGetRoomsCallBack);
+  //   SocketService.onLeaveRoom(onLeaveRoomCallBack);
 
-    //setup stream
-    SocketService.onCandidateRoomVideo(onCandidateRoomVideoCallBack);
-    SocketService.onAnswerRoomVideo(onAnswerRoomVideoCallBack);
-    return () => {
-      SocketService.leaveRoom(roomId);
-      SocketService.disConnectSocket();
-      exitRoom();
-    };
-  }, [roomId, name, exitRoom, onLeaveRoomCallBack]);
+  //   //setup stream
+  //   SocketService.onCandidateRoomVideo(onCandidateRoomVideoCallBack);
+  //   SocketService.onAnswerRoomVideo(onAnswerRoomVideoCallBack);
+  //   return () => {
+  //     SocketService.leaveRoom(roomId);
+  //     SocketService.disConnectSocket();
+  //     exitRoom();
+  //   };
+  // }, [roomId, name, exitRoom, onLeaveRoomCallBack]);
 
-  useEffect(() => {
-    //setup stream
-    SocketService.onJoinRoom(onJoinRoomCallBack);
-    SocketService.onOfferRoomVideo(onOfferRoomCallBack);
-  }, [onJoinRoomCallBack, onOfferRoomCallBack]);
+  // useEffect(() => {
+  //   //setup stream
+  //   SocketService.onJoinRoom(onJoinRoomCallBack);
+  //   SocketService.onOfferRoomVideo(onOfferRoomCallBack);
+  // }, [onJoinRoomCallBack, onOfferRoomCallBack]);
 
   useEffect(() => {
     const turnOnCamera = async () => {
@@ -166,16 +166,30 @@ export const useVideoCall = () => {
 
 
 export const useCurrentVideo = () => {
-    const videoRef = useRef(null)
+    const videoCurrentRef = useRef(null)
+    const videoCustomerRef = useRef(null)
+
     const {localStream} = useContext(VideoContext)
     useEffect(() => {
-     if (videoRef?.current?.srcObject) {
-        videoRef.current.srcObject = localStream
-        console.log('ua')
+     if (videoCurrentRef?.current) {
+        videoCurrentRef.current.srcObject = localStream
+        console.log('ua',localStream)
     }
         return () => {
             // cleanup
         }
     }, [localStream])
-    return {videoRef}
+    
+    useEffect(() => {
+      console.log('ko chay ha ba ')
+     if (videoCustomerRef?.current) {
+        videoCustomerRef.current.srcObject = localStream
+    }
+    console.log('ko chay ha ba 2',localStream)
+
+        return () => {
+            // cleanup
+        }
+    }, [localStream])
+    return {videoCurrentRef, videoCustomerRef}
 }

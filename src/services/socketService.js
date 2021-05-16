@@ -14,7 +14,7 @@ class _SocketService {
     //   forceNew: true,
     // });
     console.log('connet socket 2');
-    this.socket = io('http://192.168.1.47:1995/', {
+    this.socket = io('https://video-call-rn.herokuapp.com/', {
       forceNew: true,
     });
     return this.socket;

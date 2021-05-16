@@ -126,6 +126,8 @@ video {
   display: flex;
   flex-direction: column;
   margin: 1.5rem;
+  flex: 1;
+  background-color: red;
 }
 
 .message {
