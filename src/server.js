@@ -7,7 +7,7 @@ const app = express();
 
 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const http = require('http');
 const server = http.Server(app);
@@ -21,7 +21,6 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-console.log('muon cheet ha ma ', __dirname + '/frontend/build')
 app.use(express.static(__dirname + '/frontend/build'));
 
 
