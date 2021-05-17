@@ -14,6 +14,7 @@ export default function VideoCall() {
         room,
         customerStreams,
     } = useVideoCall()
+    console.log('room',room)
     return (
         <VideoContext.Provider
             value={{localStream, remoteStreams, room, customerStreams}}

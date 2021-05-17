@@ -12,7 +12,7 @@ const VideoBoxItem = styled.video`
 `
 
 export default function VideoBox() {
-  const { videoCustomerRef } = useCurrentVideo()
+  const { videoCustomerRef ,videoCustomer2Ref} = useCurrentVideo()
 
   return (
     <div className="main__left">
@@ -21,7 +21,11 @@ export default function VideoBox() {
           <VideoBoxItem
             ref={videoCustomerRef}
             playsInline autoPlay muted />
+                 <VideoBoxItem
+            ref={videoCustomer2Ref}
+            playsInline autoPlay muted />
         </div>
+        
       </div>
       <div className="options">
         <div className="options__left">

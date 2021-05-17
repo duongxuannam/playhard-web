@@ -13,7 +13,6 @@ class _SocketService {
     // this.socket = io('https://b1fa4722a042.ngrok.io/', {
     //   forceNew: true,
     // });
-    console.log('connet socket 2');
     this.socket = io('https://video-call-rn.herokuapp.com/', {
       forceNew: true,
     });
